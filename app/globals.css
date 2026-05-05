@@ -3,24 +3,67 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Portfolio Theme Colors */
+  --primary: #ffffff;
+  --secondary: #f9f9f9;
+  --tertiary: #ffffff;
+  --neutral: #787776;
+  --text-muted: #717171;
+  --accent: #1A1A1A;
+  --text-header: #1c1917;
+  --border: #e5e5e5;
+  --label: #444748;
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  --color-neutral: var(--neutral);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-text-header: var(--text-header);
+  --color-border: var(--border);
+  --color-label: var(--label);
+
+  --font-headline: var(--font-newsreader);
+  --font-body: var(--font-inter);
+  --font-label: var(--font-inter);
+
+  --font-newsreader: var(--font-newsreader);
+  --font-inter: var(--font-inter);
+
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-newsreader);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --primary: #1a1a1a;
+    --secondary: #121212;
+    --tertiary: #1a1a1a;
+    --neutral: #a1a1aa;
+    --accent: #ffffff;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), ui-sans-serif, system-ui;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-newsreader), ui-serif, Georgia, serif;
 }

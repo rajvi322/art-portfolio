@@ -1,28 +1,41 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
     LayoutDashboard,
     LogOut,
     Palette,
-    Mail
+    Mail,
+    Settings
 } from "lucide-react";
 
 const Sidebar = () => {
     const pathname = usePathname();
+    const router = useRouter();
 
     const menuItems = [
         { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
         { name: "Portfolio", href: "/admin/portfolio", icon: Palette },
         { name: "Inquiries", href: "/admin/inquiries", icon: Mail },
+        // { name: "Settings", href: "/admin/settings", icon: Settings },
     ];
 
+    const handleLogout = async () => {
+        try {
+            await fetch("/api/auth/logout", { method: "POST" });
+            router.push("/sign-in");
+            router.refresh();
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
+
     return (
-        <aside className="w-64 h-screen sticky top-0 bg-primary border-r border-neutral/10 flex flex-col">
+        <aside className="hidden md:flex w-64 h-screen sticky top-0 bg-primary border-r border-border flex-col">
             <div className="p-8">
                 <Link href="/" className="text-xl font-headline font-bold text-accent tracking-tighter">
-                    ARTÉ <span className="text-[10px] uppercase tracking-widest text-text-muted ml-1">Admin</span>
+                    RS Artelier <span className="text-[10px] uppercase tracking-widest text-text-muted ml-1">Admin</span>
                 </Link>
             </div>
 
@@ -47,8 +60,11 @@ const Sidebar = () => {
                 })}
             </nav>
 
-            <div className="p-4 border-t border-neutral/10">
-                <button className="flex items-center gap-3 px-4 py-3 w-full text-text-muted hover:text-error transition-colors font-label text-sm font-medium">
+            <div className="p-4 border-t border-border">
+                <button 
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 px-4 py-3 w-full text-text-muted hover:text-error transition-colors font-label text-sm font-medium cursor-pointer"
+                >
                     <LogOut size={18} />
                     <span>Logout</span>
                 </button>

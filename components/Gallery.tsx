@@ -30,9 +30,18 @@ export default function Gallery() {
   const [inquiryMessage, setInquiryMessage] = useState("");
   const [inquiryWebsite, setInquiryWebsite] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
 
-  const categories = ["all", "watercolors", "pencilcolors", "acrylics", "oil colors"];
+  const categories = [
+    "all",
+    "watercolors",
+    "pencilcolors",
+    "acrylics",
+    "oil colors",
+    "sketches",
+  ];
 
   useEffect(() => {
     fetchArtworks();
@@ -101,16 +110,19 @@ export default function Gallery() {
     }
   };
 
-  const filteredArtworks = activeCategory === "all"
-    ? artworks
-    : artworks.filter(art => art.category === activeCategory);
+  const filteredArtworks =
+    activeCategory === "all"
+      ? artworks
+      : artworks.filter((art) => art.category === activeCategory);
 
-  const allImages = selectedArtwork ? [selectedArtwork.coverImage, ...(selectedArtwork.images || [])] : [];
+  const allImages = selectedArtwork
+    ? [selectedArtwork.coverImage, ...(selectedArtwork.images || [])]
+    : [];
 
   const breakpointCols = {
     default: 3,
     1024: 3,
-    768: 2
+    768: 2,
   };
 
   return (
@@ -121,10 +133,11 @@ export default function Gallery() {
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`text-[10px] md:text-xs font-label uppercase tracking-[0.2em] transition-all pb-1 border-b-2 ${activeCategory === cat
-              ? "text-text-header border-accent"
-              : "text-text-muted border-transparent hover:text-text-header"
-              }`}
+            className={`text-[10px] md:text-xs font-label uppercase tracking-[0.2em] transition-all pb-1 border-b-2 ${
+              activeCategory === cat
+                ? "text-text-header border-accent"
+                : "text-text-muted border-transparent hover:text-text-header"
+            }`}
           >
             {cat}
           </button>
@@ -134,15 +147,11 @@ export default function Gallery() {
       {/* Grid */}
       {isLoading ? (
         <div className="columns-2 md:columns-3 gap-6 lg:gap-8 space-y-6 md:space-y-0">
-          {[
-            "h-80",
-            "h-96",
-            "h-64",
-            "h-72",
-            "h-80",
-            "h-64"
-          ].map((h, i) => (
-            <div key={i} className={`w-full ${h} mb-6 bg-secondary/20 animate-pulse rounded-sm break-inside-avoid`}></div>
+          {["h-80", "h-96", "h-64", "h-72", "h-80", "h-64"].map((h, i) => (
+            <div
+              key={i}
+              className={`w-full ${h} mb-6 bg-secondary/20 animate-pulse rounded-sm break-inside-avoid`}
+            ></div>
           ))}
         </div>
       ) : (
@@ -173,7 +182,9 @@ export default function Gallery() {
                 </div>
               </div>
               <div className="space-y-2 pt-3 px-3 pb-3">
-                <h3 className="font-newsreader text-base text-text-header group-hover:text-accent transition-colors duration-300 font-semibold leading-snug">{art.title}</h3>
+                <h3 className="font-newsreader text-base text-text-header group-hover:text-accent transition-colors duration-300 font-semibold leading-snug">
+                  {art.title}
+                </h3>
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-label uppercase tracking-widest text-text-muted bg-secondary/35 px-2.5 py-0.5 rounded-md">
                     {art.category}
@@ -209,13 +220,21 @@ export default function Gallery() {
             {allImages.length > 1 && (
               <>
                 <button
-                  onClick={() => setActiveImageIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1))}
+                  onClick={() =>
+                    setActiveImageIndex((prev) =>
+                      prev === 0 ? allImages.length - 1 : prev - 1,
+                    )
+                  }
                   className="absolute left-2 md:left-4 p-2 text-text-header bg-white/40 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none hover:bg-secondary/20 rounded-full transition-colors shadow-sm md:shadow-none"
                 >
                   <ChevronLeft size={24} className="md:w-8 md:h-8" />
                 </button>
                 <button
-                  onClick={() => setActiveImageIndex((prev) => (prev === allImages.length - 1 ? 0 : prev + 1))}
+                  onClick={() =>
+                    setActiveImageIndex((prev) =>
+                      prev === allImages.length - 1 ? 0 : prev + 1,
+                    )
+                  }
                   className="absolute right-2 md:right-4 p-2 text-text-header bg-white/40 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none hover:bg-secondary/20 rounded-full transition-colors shadow-sm md:shadow-none"
                 >
                   <ChevronRight size={24} className="md:w-8 md:h-8" />
@@ -244,24 +263,32 @@ export default function Gallery() {
 
                 <div className="space-y-2">
                   <p className="text-xs md:text-sm leading-relaxed text-text-muted font-inter">
-                    {selectedArtwork.description || "No description provided for this piece."}
+                    {selectedArtwork.description ||
+                      "No description provided for this piece."}
                   </p>
                 </div>
 
                 {/* Thumbnail Navigation */}
                 {allImages.length > 1 && (
                   <div className="pt-3 md:pt-6 space-y-3">
-                    <p className="text-[10px] font-label uppercase tracking-widest text-text-muted">Collection Detail Views</p>
+                    <p className="text-[10px] font-label uppercase tracking-widest text-text-muted">
+                      Collection Detail Views
+                    </p>
                     <div className="grid grid-cols-4 gap-2">
                       {allImages.map((img, idx) => (
                         <button
                           key={idx}
                           onClick={() => setActiveImageIndex(idx)}
                           className={`aspect-square border-2 transition-all overflow-hidden ${
-                            activeImageIndex === idx ? "border-accent" : "border-transparent opacity-50 hover:opacity-100"
+                            activeImageIndex === idx
+                              ? "border-accent"
+                              : "border-transparent opacity-50 hover:opacity-100"
                           }`}
                         >
-                          <img src={img} className="w-full h-full object-cover" />
+                          <img
+                            src={img}
+                            className="w-full h-full object-cover"
+                          />
                         </button>
                       ))}
                     </div>
@@ -291,7 +318,9 @@ export default function Gallery() {
                 </button>
 
                 <div className="space-y-1">
-                  <p className="text-[10px] font-label uppercase tracking-[0.2em] text-accent font-bold">Inquiry</p>
+                  <p className="text-[10px] font-label uppercase tracking-[0.2em] text-accent font-bold">
+                    Inquiry
+                  </p>
                   <h3 className="text-xl md:text-2xl font-newsreader text-text-header leading-tight">
                     {selectedArtwork.title}
                   </h3>
@@ -300,14 +329,29 @@ export default function Gallery() {
                 {submitStatus === "success" ? (
                   <div className="space-y-4 pt-4 text-center">
                     <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-500 mx-auto flex items-center justify-center border border-emerald-100">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 animate-pulse">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2.5}
+                        stroke="currentColor"
+                        className="w-6 h-6 animate-pulse"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M4.5 12.75l6 6 9-13.5"
+                        />
                       </svg>
                     </div>
                     <div className="space-y-2">
-                      <h4 className="font-headline font-bold text-text-header text-base">Message Sent!</h4>
+                      <h4 className="font-headline font-bold text-text-header text-base">
+                        Message Sent!
+                      </h4>
                       <p className="text-xs text-text-muted leading-relaxed font-body">
-                        Thank you, {inquiryName}! Your message regarding this piece has been successfully sent to Rajvi. We have also sent a confirmation to {inquiryEmail}.
+                        Thank you, {inquiryName}! Your message regarding this
+                        piece has been successfully sent to Rajvi. We have also
+                        sent a confirmation to {inquiryEmail}.
                       </p>
                     </div>
                     <div className="pt-4">
@@ -328,14 +372,19 @@ export default function Gallery() {
                     </div>
                   </div>
                 ) : (
-                  <form onSubmit={handleInquirySubmit} className="space-y-4 pt-2">
+                  <form
+                    onSubmit={handleInquirySubmit}
+                    className="space-y-4 pt-2"
+                  >
                     {submitStatus === "error" && (
                       <div className="p-3 bg-red-50 text-red-600 rounded-lg text-xs font-label border border-red-100">
                         Failed to submit inquiry. Please try again.
                       </div>
                     )}
                     <div className="space-y-1">
-                      <label className="text-[9px] font-label uppercase tracking-widest text-text-muted font-bold">Your Name *</label>
+                      <label className="text-[9px] font-label uppercase tracking-widest text-text-muted font-bold">
+                        Your Name *
+                      </label>
                       <input
                         type="text"
                         required
@@ -347,7 +396,9 @@ export default function Gallery() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[9px] font-label uppercase tracking-widest text-text-muted font-bold">Email Address *</label>
+                      <label className="text-[9px] font-label uppercase tracking-widest text-text-muted font-bold">
+                        Email Address *
+                      </label>
                       <input
                         type="email"
                         required
@@ -359,7 +410,9 @@ export default function Gallery() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[9px] font-label uppercase tracking-widest text-text-muted font-bold">Phone (Optional)</label>
+                      <label className="text-[9px] font-label uppercase tracking-widest text-text-muted font-bold">
+                        Phone (Optional)
+                      </label>
                       <input
                         type="tel"
                         value={inquiryPhone}
@@ -370,7 +423,9 @@ export default function Gallery() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[9px] font-label uppercase tracking-widest text-text-muted font-bold">Message *</label>
+                      <label className="text-[9px] font-label uppercase tracking-widest text-text-muted font-bold">
+                        Message *
+                      </label>
                       <textarea
                         required
                         rows={4}
@@ -382,7 +437,10 @@ export default function Gallery() {
                       />
                     </div>
                     {/* Honeypot field */}
-                    <div className="absolute opacity-0 -z-50 h-0 w-0 overflow-hidden pointer-events-none" aria-hidden="true">
+                    <div
+                      className="absolute opacity-0 -z-50 h-0 w-0 overflow-hidden pointer-events-none"
+                      aria-hidden="true"
+                    >
                       <label>Website URL</label>
                       <input
                         type="text"
@@ -395,7 +453,12 @@ export default function Gallery() {
                     </div>
                     <button
                       type="submit"
-                      disabled={isSending || !inquiryName.trim() || !inquiryEmail.trim() || !inquiryMessage.trim()}
+                      disabled={
+                        isSending ||
+                        !inquiryName.trim() ||
+                        !inquiryEmail.trim() ||
+                        !inquiryMessage.trim()
+                      }
                       className="w-full py-3 bg-accent text-primary font-label text-[10px] uppercase tracking-[0.2em] hover:opacity-95 transition-opacity flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       {isSending ? (

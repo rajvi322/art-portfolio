@@ -1,14 +1,30 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Trash2, Edit3, Image as ImageIcon, Upload, Search, ChevronLeft, ChevronRight, X, AlertTriangle } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  Edit3,
+  Image as ImageIcon,
+  Upload,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  AlertTriangle,
+} from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { AdminHeader } from "@/components/ui/AdminHeader";
 
 interface Artwork {
   _id: string;
   title: string;
-  category: "watercolors" | "pencilcolors" | "acrylics" | "oil colors";
+  category:
+    | "watercolors"
+    | "pencilcolors"
+    | "acrylics"
+    | "oil colors"
+    | "sketches";
   year: string;
   coverImage: string;
   images: string[];
@@ -23,12 +39,18 @@ const PortfolioAdmin = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [formData, setFormData] = useState({
     title: "",
-    category: "watercolors" as "watercolors" | "pencilcolors" | "acrylics" | "oil colors" | "",
+    category: "watercolors" as
+      | "watercolors"
+      | "pencilcolors"
+      | "acrylics"
+      | "oil colors"
+      | "sketches"
+      | "",
     year: new Date().getFullYear().toString(),
     coverImage: "",
     images: [] as string[],
     description: "",
-    status: "Published"
+    status: "Published",
   });
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [artworkToDelete, setArtworkToDelete] = useState<Artwork | null>(null);
@@ -38,7 +60,6 @@ const PortfolioAdmin = () => {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);
-
 
   useEffect(() => {
     fetchArtworks();
@@ -51,7 +72,7 @@ const PortfolioAdmin = () => {
         cache: "no-store",
         headers: {
           "Cache-Control": "no-cache",
-          "Pragma": "no-cache",
+          Pragma: "no-cache",
         },
       });
       const data = await res.json();
@@ -84,7 +105,9 @@ const PortfolioAdmin = () => {
       return;
     }
 
-    const url = editingArtwork ? `/api/artworks/${editingArtwork._id}` : "/api/artworks";
+    const url = editingArtwork
+      ? `/api/artworks/${editingArtwork._id}`
+      : "/api/artworks";
     const method = editingArtwork ? "PUT" : "POST";
 
     try {
@@ -104,7 +127,7 @@ const PortfolioAdmin = () => {
           coverImage: "",
           images: [],
           description: "",
-          status: "Published"
+          status: "Published",
         });
         fetchArtworks();
       }
@@ -117,7 +140,9 @@ const PortfolioAdmin = () => {
     if (!artworkToDelete) return;
     setIsDeletingArtwork(true);
     try {
-      const res = await fetch(`/api/artworks/${artworkToDelete._id}`, { method: "DELETE" });
+      const res = await fetch(`/api/artworks/${artworkToDelete._id}`, {
+        method: "DELETE",
+      });
       if (res.ok) {
         fetchArtworks();
         setArtworkToDelete(null);
@@ -138,7 +163,7 @@ const PortfolioAdmin = () => {
       coverImage: artwork.coverImage,
       images: artwork.images || [],
       description: artwork.description || "",
-      status: artwork.status
+      status: artwork.status,
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -155,10 +180,14 @@ const PortfolioAdmin = () => {
       const result = await res.json();
       if (result.url) {
         if (isCover) {
-          setFormData(prev => ({ ...prev, coverImage: result.url }));
-          if (errors.coverImage) setErrors(prev => ({ ...prev, coverImage: false }));
+          setFormData((prev) => ({ ...prev, coverImage: result.url }));
+          if (errors.coverImage)
+            setErrors((prev) => ({ ...prev, coverImage: false }));
         } else {
-          setFormData(prev => ({ ...prev, images: [...prev.images, result.url] }));
+          setFormData((prev) => ({
+            ...prev,
+            images: [...prev.images, result.url],
+          }));
         }
       }
     } catch (error) {
@@ -166,7 +195,10 @@ const PortfolioAdmin = () => {
     }
   };
 
-  const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>, isCover: boolean = true) => {
+  const onFileSelect = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    isCover: boolean = true,
+  ) => {
     if (e.target.files?.[0]) {
       handleFileUpload(e.target.files[0], isCover);
     }
@@ -193,13 +225,15 @@ const PortfolioAdmin = () => {
       formData.coverImage !== editingArtwork.coverImage ||
       (formData.description || "") !== (editingArtwork.description || "") ||
       formData.status !== editingArtwork.status ||
-      JSON.stringify(formData.images) !== JSON.stringify(editingArtwork.images || [])
+      JSON.stringify(formData.images) !==
+        JSON.stringify(editingArtwork.images || [])
     );
   };
 
-  const filteredArtworks = artworks.filter(art =>
-    art.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    art.category.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredArtworks = artworks.filter(
+    (art) =>
+      art.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      art.category.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const ITEMS_PER_PAGE = 5;
@@ -207,10 +241,14 @@ const PortfolioAdmin = () => {
   const activePage = Math.min(currentPage, totalPages);
   const paginatedArtworks = filteredArtworks.slice(
     (activePage - 1) * ITEMS_PER_PAGE,
-    activePage * ITEMS_PER_PAGE
+    activePage * ITEMS_PER_PAGE,
   );
-  const rangeStart = filteredArtworks.length === 0 ? 0 : (activePage - 1) * ITEMS_PER_PAGE + 1;
-  const rangeEnd = Math.min(activePage * ITEMS_PER_PAGE, filteredArtworks.length);
+  const rangeStart =
+    filteredArtworks.length === 0 ? 0 : (activePage - 1) * ITEMS_PER_PAGE + 1;
+  const rangeEnd = Math.min(
+    activePage * ITEMS_PER_PAGE,
+    filteredArtworks.length,
+  );
 
   return (
     <div className="space-y-12">
@@ -221,14 +259,17 @@ const PortfolioAdmin = () => {
       />
 
       {/* Creation/Edit Form Section */}
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+      >
         {/* Upload Area */}
         <div className="space-y-6">
           {/* Cover Image Upload */}
           <div
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => onDrop(e, true)}
-            className={`bg-white border ${errors.coverImage ? 'border-red-500' : 'border-border'} rounded-lg p-8 flex flex-col items-center justify-center text-center space-y-4 min-h-[200px] hover:border-accent transition-colors group cursor-pointer`}
+            className={`bg-white border ${errors.coverImage ? "border-red-500" : "border-border"} rounded-lg p-8 flex flex-col items-center justify-center text-center space-y-4 min-h-[200px] hover:border-accent transition-colors group cursor-pointer`}
             onClick={() => document.getElementById("coverInput")?.click()}
           >
             <input
@@ -240,16 +281,25 @@ const PortfolioAdmin = () => {
             />
             {formData.coverImage ? (
               <div className="relative w-full h-48 rounded overflow-hidden group/img">
-                <img src={formData.coverImage} alt="Cover Preview" className="w-full h-full object-cover" />
+                <img
+                  src={formData.coverImage}
+                  alt="Cover Preview"
+                  className="w-full h-full object-cover"
+                />
                 <button
                   type="button"
-                  onClick={(e) => { e.stopPropagation(); setFormData({ ...formData, coverImage: "" }); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setFormData({ ...formData, coverImage: "" });
+                  }}
                   className="absolute top-2 right-2 p-1 bg-black/50 text-white rounded-full hover:bg-black transition-colors"
                 >
                   <X size={12} />
                 </button>
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity">
-                  <span className="text-[10px] text-white font-label uppercase tracking-widest bg-black/40 px-3 py-1 rounded-full">Change Cover</span>
+                  <span className="text-[10px] text-white font-label uppercase tracking-widest bg-black/40 px-3 py-1 rounded-full">
+                    Change Cover
+                  </span>
                 </div>
               </div>
             ) : (
@@ -258,8 +308,12 @@ const PortfolioAdmin = () => {
                   <Upload size={24} />
                 </div>
                 <div>
-                  <h3 className="font-headline text-base font-medium mb-1">Set Cover Image</h3>
-                  <p className="text-[10px] text-text-muted uppercase tracking-widest">Main display piece</p>
+                  <h3 className="font-headline text-base font-medium mb-1">
+                    Set Cover Image
+                  </h3>
+                  <p className="text-[10px] text-text-muted uppercase tracking-widest">
+                    Main display piece
+                  </p>
                 </div>
               </>
             )}
@@ -269,8 +323,12 @@ const PortfolioAdmin = () => {
           <div className="bg-white border border-border rounded-lg p-6 space-y-4">
             <div className="flex justify-between items-center">
               <div>
-                <label className="text-[10px] font-label uppercase tracking-widest text-text-muted">Gallery Collection</label>
-                <p className="text-[9px] text-text-muted mt-1 uppercase tracking-tighter">Additional detail shots and angles</p>
+                <label className="text-[10px] font-label uppercase tracking-widest text-text-muted">
+                  Gallery Collection
+                </label>
+                <p className="text-[9px] text-text-muted mt-1 uppercase tracking-tighter">
+                  Additional detail shots and angles
+                </p>
               </div>
               <button
                 type="button"
@@ -288,7 +346,9 @@ const PortfolioAdmin = () => {
                 accept="image/*"
                 onChange={(e) => {
                   if (e.target.files) {
-                    Array.from(e.target.files).forEach(file => handleFileUpload(file, false));
+                    Array.from(e.target.files).forEach((file) =>
+                      handleFileUpload(file, false),
+                    );
                   }
                 }}
               />
@@ -299,17 +359,31 @@ const PortfolioAdmin = () => {
               onDrop={(e) => {
                 e.preventDefault();
                 if (e.dataTransfer.files) {
-                  Array.from(e.dataTransfer.files).forEach(file => handleFileUpload(file, false));
+                  Array.from(e.dataTransfer.files).forEach((file) =>
+                    handleFileUpload(file, false),
+                  );
                 }
               }}
               className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 min-h-[120px] p-4 border-2 border-dashed border-border rounded-lg group hover:border-accent/20 transition-colors"
             >
               {formData.images.map((img, index) => (
-                <div key={index} className="relative aspect-square rounded overflow-hidden border border-border group/item">
-                  <img src={img} alt={`Gallery ${index}`} className="w-full h-full object-cover" />
+                <div
+                  key={index}
+                  className="relative aspect-square rounded overflow-hidden border border-border group/item"
+                >
+                  <img
+                    src={img}
+                    alt={`Gallery ${index}`}
+                    className="w-full h-full object-cover"
+                  />
                   <button
                     type="button"
-                    onClick={() => setFormData({ ...formData, images: formData.images.filter((_, i) => i !== index) })}
+                    onClick={() =>
+                      setFormData({
+                        ...formData,
+                        images: formData.images.filter((_, i) => i !== index),
+                      })
+                    }
                     className="absolute top-1 right-1 p-1 bg-black/50 text-white rounded-full hover:bg-black transition-colors opacity-0 group-hover/item:opacity-100"
                   >
                     <X size={8} />
@@ -322,7 +396,9 @@ const PortfolioAdmin = () => {
                 className="flex flex-col items-center justify-center border border-dashed border-border rounded aspect-square hover:bg-secondary/5 hover:border-accent/40 transition-all text-text-muted group-hover:text-accent"
               >
                 <Plus size={16} />
-                <span className="text-[8px] uppercase mt-1 tracking-tighter">Add</span>
+                <span className="text-[8px] uppercase mt-1 tracking-tighter">
+                  Add
+                </span>
               </button>
             </div>
           </div>
@@ -330,11 +406,15 @@ const PortfolioAdmin = () => {
 
         {/* Metadata Area */}
         <div className="bg-white border border-border rounded-lg p-8 space-y-6">
-          <h3 className="font-headline text-lg font-medium">Metadata Details</h3>
+          <h3 className="font-headline text-lg font-medium">
+            Metadata Details
+          </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-[10px] font-label uppercase tracking-widest text-text-muted">Artwork Title <span className="text-red-500">*</span></label>
+              <label className="text-[10px] font-label uppercase tracking-widest text-text-muted">
+                Artwork Title <span className="text-red-500">*</span>
+              </label>
               <input
                 type="text"
                 value={formData.title}
@@ -342,34 +422,42 @@ const PortfolioAdmin = () => {
                   setFormData({ ...formData, title: e.target.value });
                   if (errors.title) setErrors({ ...errors, title: false });
                 }}
-                className={`w-full px-4 py-2.5 text-sm bg-secondary/10 border ${errors.title ? 'border-red-500' : 'border-border'} rounded focus:ring-1 focus:ring-accent outline-none transition-colors`}
+                className={`w-full px-4 py-2.5 text-sm bg-secondary/10 border ${errors.title ? "border-red-500" : "border-border"} rounded focus:ring-1 focus:ring-accent outline-none transition-colors`}
                 placeholder="e.g. Echoes of Silence"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-label uppercase tracking-widest text-text-muted">Category <span className="text-red-500">*</span></label>
+              <label className="text-[10px] font-label uppercase tracking-widest text-text-muted">
+                Category <span className="text-red-500">*</span>
+              </label>
               <select
                 value={formData.category}
                 onChange={(e) => {
                   setFormData({ ...formData, category: e.target.value as any });
-                  if (errors.category) setErrors({ ...errors, category: false });
+                  if (errors.category)
+                    setErrors({ ...errors, category: false });
                 }}
-                className={`w-full px-4 py-2.5 text-sm bg-secondary/10 border ${errors.category ? 'border-red-500' : 'border-border'} rounded focus:ring-1 focus:ring-accent outline-none appearance-none capitalize transition-colors`}
+                className={`w-full px-4 py-2.5 text-sm bg-secondary/10 border ${errors.category ? "border-red-500" : "border-border"} rounded focus:ring-1 focus:ring-accent outline-none appearance-none capitalize transition-colors`}
               >
                 <option value="">Select Category</option>
                 <option value="watercolors">Watercolors</option>
                 <option value="pencilcolors">Pencilcolors</option>
                 <option value="acrylics">Acrylics</option>
                 <option value="oil colors">Oil Colors</option>
+                <option value="sketches">Sketches</option>
               </select>
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-label uppercase tracking-widest text-text-muted">Description</label>
+            <label className="text-[10px] font-label uppercase tracking-widest text-text-muted">
+              Description
+            </label>
             <textarea
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
               className="w-full px-4 py-2.5 text-sm bg-secondary/10 border border-border rounded focus:ring-1 focus:ring-accent outline-none min-h-[120px] resize-none"
               placeholder="Describe the concept, materials, and emotional intent..."
             />
@@ -396,7 +484,7 @@ const PortfolioAdmin = () => {
                         coverImage: "",
                         images: [],
                         description: "",
-                        status: "Published"
+                        status: "Published",
                       });
                     }}
                     className="px-6 py-2 border border-border rounded font-label text-xs font-semibold uppercase tracking-wider hover:bg-secondary/5 transition-all"
@@ -408,10 +496,11 @@ const PortfolioAdmin = () => {
                   <button
                     type="submit"
                     disabled={editingArtwork ? !isFormChanged() : false}
-                    className={`px-8 py-2.5 bg-accent text-primary rounded font-label text-xs font-semibold uppercase tracking-wider transition-all ${editingArtwork && !isFormChanged()
+                    className={`px-8 py-2.5 bg-accent text-primary rounded font-label text-xs font-semibold uppercase tracking-wider transition-all ${
+                      editingArtwork && !isFormChanged()
                         ? "opacity-50 cursor-not-allowed"
                         : "hover:opacity-90"
-                      }`}
+                    }`}
                   >
                     {editingArtwork ? "Update Artwork" : "Publish Artwork"}
                   </button>
@@ -425,10 +514,15 @@ const PortfolioAdmin = () => {
       {/* Archive Section */}
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <h3 className="font-headline text-lg font-medium">Existing Archive</h3>
+          <h3 className="font-headline text-lg font-medium">
+            Existing Archive
+          </h3>
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+              <Search
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
+              />
               <input
                 type="text"
                 placeholder="Filter works..."
@@ -462,22 +556,35 @@ const PortfolioAdmin = () => {
               <tbody className="divide-y divide-border">
                 {isLoading ? (
                   <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center text-text-muted text-xs font-label italic">
+                    <td
+                      colSpan={4}
+                      className="px-6 py-12 text-center text-text-muted text-xs font-label italic"
+                    >
                       Retrieving collection...
                     </td>
                   </tr>
                 ) : filteredArtworks.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center text-text-muted text-xs font-label italic">
+                    <td
+                      colSpan={4}
+                      className="px-6 py-12 text-center text-text-muted text-xs font-label italic"
+                    >
                       No matching works found.
                     </td>
                   </tr>
                 ) : (
                   paginatedArtworks.map((art) => (
-                    <tr key={art._id} className="group hover:bg-secondary/5 transition-colors">
+                    <tr
+                      key={art._id}
+                      className="group hover:bg-secondary/5 transition-colors"
+                    >
                       <td className="px-6 py-4">
                         <div className="w-16 h-10 rounded bg-secondary/30 overflow-hidden border border-border">
-                          <img src={art.coverImage} alt={art.title} className="w-full h-full object-cover" />
+                          <img
+                            src={art.coverImage}
+                            alt={art.title}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -485,11 +592,15 @@ const PortfolioAdmin = () => {
                           <p className="text-sm font-headline font-semibold text-text-header">
                             {art.title}
                           </p>
-                          <p className="text-[10px] text-text-muted mt-0.5 uppercase tracking-tighter">ID-{art._id.slice(-6).toUpperCase()}</p>
+                          <p className="text-[10px] text-text-muted mt-0.5 uppercase tracking-tighter">
+                            ID-{art._id.slice(-6).toUpperCase()}
+                          </p>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-xs text-text-header">{art.category}</span>
+                        <span className="text-xs text-text-header">
+                          {art.category}
+                        </span>
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -524,27 +635,34 @@ const PortfolioAdmin = () => {
             {totalPages > 1 && (
               <div className="flex items-center gap-1">
                 <button
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
                   disabled={activePage === 1}
                   className="p-1 text-text-muted hover:text-text-header disabled:opacity-30 transition-all cursor-pointer"
                   title="Previous Page"
                 >
                   <ChevronLeft size={16} />
                 </button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`w-6 h-6 flex items-center justify-center text-[10px] font-bold rounded-sm transition-all cursor-pointer ${activePage === page
-                        ? "bg-accent text-primary"
-                        : "text-text-muted hover:bg-secondary/10"
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`w-6 h-6 flex items-center justify-center text-[10px] font-bold rounded-sm transition-all cursor-pointer ${
+                        activePage === page
+                          ? "bg-accent text-primary"
+                          : "text-text-muted hover:bg-secondary/10"
                       }`}
-                  >
-                    {page}
-                  </button>
-                ))}
+                    >
+                      {page}
+                    </button>
+                  ),
+                )}
                 <button
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
                   disabled={activePage === totalPages}
                   className="p-1 text-text-muted hover:text-text-header disabled:opacity-30 transition-all cursor-pointer"
                   title="Next Page"
@@ -560,11 +678,34 @@ const PortfolioAdmin = () => {
       {/* Footer Branding */}
       <div className="pt-12 pb-8 flex flex-col items-center gap-4 border-t border-border">
         <div className="flex gap-8 text-[10px] font-label uppercase tracking-widest text-text-muted flex-wrap justify-center">
-          <a href="https://www.instagram.com/rs.artelier" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Instagram</a>
-          <a href="https://youtube.com/@rsartelier?si=dm6fW_vYEbb6sjMS" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">YouTube</a>
-          <a href="https://pin.it/4VZ7pX357" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Pinterest</a>
+          <a
+            href="https://www.instagram.com/rs.artelier"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-accent transition-colors"
+          >
+            Instagram
+          </a>
+          <a
+            href="https://youtube.com/@rsartelier?si=dm6fW_vYEbb6sjMS"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-accent transition-colors"
+          >
+            YouTube
+          </a>
+          <a
+            href="https://pin.it/4VZ7pX357"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-accent transition-colors"
+          >
+            Pinterest
+          </a>
         </div>
-        <p className="text-[10px] text-text-muted uppercase tracking-widest">© 2024 Arté Portfolio. All Rights Reserved.</p>
+        <p className="text-[10px] text-text-muted uppercase tracking-widest">
+          © 2024 Arté Portfolio. All Rights Reserved.
+        </p>
       </div>
       {/* Delete Confirmation Modal */}
       <Modal
@@ -576,11 +717,19 @@ const PortfolioAdmin = () => {
         <div className="space-y-6">
           <div className="flex flex-col items-center justify-center text-center gap-4 py-2">
             <div className="flex-shrink-0 w-12 h-12 rounded-full bg-red-50 dark:bg-red-950/30 flex items-center justify-center text-red-500">
-              <AlertTriangle size={24} className="animate-bounce" style={{ animationDuration: "2s" }} />
+              <AlertTriangle
+                size={24}
+                className="animate-bounce"
+                style={{ animationDuration: "2s" }}
+              />
             </div>
             <div className="space-y-2 max-w-sm">
               <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                Are you sure you want to permanently delete <strong className="font-semibold text-neutral-800 dark:text-neutral-200">"{artworkToDelete?.title}"</strong>? This action cannot be undone.
+                Are you sure you want to permanently delete{" "}
+                <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
+                  "{artworkToDelete?.title}"
+                </strong>
+                ? This action cannot be undone.
               </p>
             </div>
           </div>

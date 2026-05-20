@@ -10,7 +10,13 @@ const ArtworkSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, "Please provide a category."],
-      enum: ["watercolors", "pencilcolors", "acrylics", "oil colors"],
+      enum: [
+        "watercolors",
+        "pencilcolors",
+        "acrylics",
+        "oil colors",
+        "sketches",
+      ],
     },
     year: {
       type: String,
@@ -33,7 +39,8 @@ const ArtworkSchema = new mongoose.Schema(
       default: "Published",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export default mongoose.models.Artwork || mongoose.model("Artwork", ArtworkSchema);
+export default mongoose.models.Artwork ||
+  mongoose.model("Artwork", ArtworkSchema);

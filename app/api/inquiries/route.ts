@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Inquiry from "@/models/Inquiry";
+import Artwork from "@/models/Artwork";
 import { sendInquiryEmail } from "@/lib/mail";
 
 export const dynamic = "force-dynamic";
@@ -73,7 +74,8 @@ export async function GET(request: NextRequest) {
       Inquiry.find(query)
         .sort({ createdAt: sort })
         .skip(skip)
-        .limit(limit),
+        .limit(limit)
+        .populate("artwork"),
       Inquiry.countDocuments(query),
       Inquiry.countDocuments({ deletedAt: null, isRead: false }),
       Inquiry.countDocuments({ deletedAt: null, isStarred: true }),
@@ -102,7 +104,13 @@ export async function POST(request: Request) {
   await dbConnect();
   try {
     const body = await request.json();
-    const { name, email, phone, subject, message } = body;
+    const { name, email, phone, subject, message, artworkId, website_url } = body;
+
+    // Honeypot check for bots
+    if (website_url && website_url.trim() !== "") {
+      // Fake success response to trick the bot
+      return NextResponse.json({ success: true, fake: true }, { status: 201 });
+    }
 
     // Field validation
     if (!name || !name.trim()) {
@@ -127,7 +135,8 @@ export async function POST(request: Request) {
       message,
       isRead: false,
       isStarred: false,
-      status: "New"
+      status: "New",
+      artwork: artworkId || null,
     });
 
     // Send email using SMTP

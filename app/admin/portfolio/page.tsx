@@ -302,7 +302,7 @@ const PortfolioAdmin = () => {
                   Array.from(e.dataTransfer.files).forEach(file => handleFileUpload(file, false));
                 }
               }}
-              className="grid grid-cols-4 gap-3 min-h-[120px] p-4 border-2 border-dashed border-border rounded-lg group hover:border-accent/20 transition-colors"
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 min-h-[120px] p-4 border-2 border-dashed border-border rounded-lg group hover:border-accent/20 transition-colors"
             >
               {formData.images.map((img, index) => (
                 <div key={index} className="relative aspect-square rounded overflow-hidden border border-border group/item">
@@ -332,7 +332,7 @@ const PortfolioAdmin = () => {
         <div className="bg-white border border-border rounded-lg p-8 space-y-6">
           <h3 className="font-headline text-lg font-medium">Metadata Details</h3>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-[10px] font-label uppercase tracking-widest text-text-muted">Artwork Title <span className="text-red-500">*</span></label>
               <input
@@ -434,7 +434,7 @@ const PortfolioAdmin = () => {
                 placeholder="Filter works..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 pr-4 py-2 text-xs border border-border rounded focus:ring-1 focus:ring-accent outline-none w-64 bg-white"
+                className="pl-9 pr-4 py-2 text-xs border border-border rounded focus:ring-1 focus:ring-accent outline-none w-full sm:w-64 bg-white"
               />
             </div>
             <button className="p-2 border border-border rounded hover:bg-white transition-colors">
@@ -559,10 +559,10 @@ const PortfolioAdmin = () => {
 
       {/* Footer Branding */}
       <div className="pt-12 pb-8 flex flex-col items-center gap-4 border-t border-border">
-        <div className="flex gap-8 text-[10px] font-label uppercase tracking-widest text-text-muted">
-          <a href="#" className="hover:text-accent transition-colors">Instagram</a>
-          <a href="#" className="hover:text-accent transition-colors">Youtube</a>
-          <a href="#" className="hover:text-accent transition-colors">Pinterest</a>
+        <div className="flex gap-8 text-[10px] font-label uppercase tracking-widest text-text-muted flex-wrap justify-center">
+          <a href="https://www.instagram.com/rs.artelier" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Instagram</a>
+          <a href="https://youtube.com/@rsartelier?si=dm6fW_vYEbb6sjMS" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">YouTube</a>
+          <a href="https://pin.it/4VZ7pX357" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Pinterest</a>
         </div>
         <p className="text-[10px] text-text-muted uppercase tracking-widest">© 2024 Arté Portfolio. All Rights Reserved.</p>
       </div>

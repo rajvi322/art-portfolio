@@ -56,12 +56,15 @@ const Dashboard = () => {
           fetch("/api/inquiries")
         ]);
         const works = await worksRes.json();
-        const inquiries = await inquiriesRes.json();
+        const inquiriesData = await inquiriesRes.json();
+        
+        const inquiriesList = Array.isArray(inquiriesData) ? inquiriesData : (inquiriesData.inquiries || []);
+        const totalInquiriesCount = Array.isArray(inquiriesData) ? inquiriesData.length : (inquiriesData.allCount !== undefined ? inquiriesData.allCount : inquiriesList.length);
 
         setStats({
           totalWorks: works.length,
-          totalInquiries: inquiries.length,
-          recentInquiries: inquiries.slice(0, 3),
+          totalInquiries: totalInquiriesCount,
+          recentInquiries: inquiriesList.slice(0, 3),
           recentWorks: works.slice(0, 4)
         });
       } catch (error) {

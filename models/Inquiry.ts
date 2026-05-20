@@ -39,8 +39,13 @@ const InquirySchema = new mongoose.Schema(
       enum: ["New", "Read", "Replied", "Archived"],
       default: "New",
     },
+    artwork: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Artwork",
+      required: false,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 if (mongoose.models.Inquiry) {

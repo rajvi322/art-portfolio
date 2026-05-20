@@ -1,89 +1,52 @@
+import Gallery from "@/components/Gallery";
+
 export default function Home() {
   return (
-    <div className="min-h-screen bg-secondary p-8 md:p-16 font-body">
-      <div className="max-w-5xl mx-auto space-y-12">
-        <header className="space-y-2">
-          <h1 className="text-4xl font-headline text-accent">Minimalist Art Portfolio System</h1>
-          <p className="text-neutral font-label">Design System & Theme Preview</p>
-        </header>
+    <div className="min-h-screen bg-primary font-inter text-text-header">
+      {/* Hero Section */}
+      <section className="pt-12 md:pt-24 pb-16 md:pb-24 px-6">
+        <div className="max-w-7xl mx-auto text-center space-y-6">
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-7xl font-newsreader font-medium tracking-tight leading-[1.1]">
+              Colors, Calm & <br />
+              <span className="italic text-accent">Creativity</span>
+            </h1>
+            <p className="max-w-2xl mx-auto text-text-muted text-xs md:text-sm font-label uppercase tracking-[0.2em] pt-2">
+              A small collection of artworks, sketches, and creative moments
+            </p>
+          </div>
+        </div>
+      </section>
 
-        <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Colors Section */}
-          <section className="bg-primary p-6 rounded-2xl shadow-sm border border-neutral/10 space-y-6">
-            <h2 className="text-xl font-headline">Colors</h2>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="font-label">Primary</span>
-                <span className="text-neutral text-sm">#FFFFFF</span>
-              </div>
-              <div className="h-16 w-full bg-primary border border-neutral/20 rounded-lg"></div>
+      {/* Gallery Section */}
+      <section id="gallery" className="px-6 pb-16 md:pb-28">
+        <div className="max-w-7xl mx-auto">
+          <Gallery />
+        </div>
+      </section>
 
-              <div className="flex items-center justify-between">
-                <span className="font-label">Secondary</span>
-                <span className="text-neutral text-sm">#F9F9F9</span>
-              </div>
-              <div className="h-16 w-full bg-secondary border border-neutral/20 rounded-lg"></div>
 
-              <div className="flex items-center justify-between">
-                <span className="font-label">Neutral</span>
-                <span className="text-neutral text-sm">#787776</span>
-              </div>
-              <div className="h-16 w-full bg-neutral rounded-lg"></div>
+      {/* Footer Branding */}
+      <footer className="py-12 md:py-20 px-6 bg-primary">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+          <div className="space-y-3 text-center md:text-left">
+            <h2 className="text-2xl font-newsreader font-bold tracking-tight">RS Artelier</h2>
+            <p className="text-[10px] font-label uppercase tracking-widest text-text-muted max-w-xs leading-loose">
+              Art, colors, and creativity from my little corner.
+            </p>
+          </div>
 
-              <div className="flex items-center justify-between">
-                <span className="font-label">Text Muted</span>
-                <span className="text-text-muted text-sm">#717171</span>
-              </div>
-              <div className="h-16 w-full bg-text-muted rounded-lg"></div>
-            </div>
-          </section>
+          <div className="flex gap-12 text-[10px] font-label uppercase tracking-[0.3em] text-text-muted">
+            <a href="https://www.instagram.com/rs.artelier" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Instagram</a>
+            <a href="/about" className="hover:text-accent transition-colors">About</a>
+            <a href="/contact" className="hover:text-accent transition-colors">Contact</a>
+          </div>
 
-          {/* Typography Section */}
-          <section className="bg-primary p-6 rounded-2xl shadow-sm border border-neutral/10 space-y-8">
-            <h2 className="text-xl font-headline">Typography</h2>
-            <div className="space-y-6">
-              <div>
-                <p className="text-xs text-text-muted mb-1 font-label uppercase tracking-wider">Headline / Newsreader</p>
-                <p className="text-6xl font-newsreader">Aa</p>
-              </div>
-              <div>
-                <p className="text-xs text-text-muted mb-1 font-label uppercase tracking-wider">Body / Inter</p>
-                <p className="text-6xl font-inter">Aa</p>
-              </div>
-              <div>
-                <p className="text-xs text-text-muted mb-1 font-label uppercase tracking-wider">Label / Inter</p>
-                <p className="text-4xl font-label">Aa</p>
-              </div>
-            </div>
-          </section>
-
-          {/* Buttons & UI Section */}
-          <section className="bg-primary p-6 rounded-2xl shadow-sm border border-neutral/10 space-y-6">
-            <h2 className="text-xl font-headline">UI Elements</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <button className="bg-accent text-primary px-4 py-2 rounded font-label">Primary</button>
-              <button className="bg-secondary text-accent px-4 py-2 rounded font-label border border-neutral/10">Secondary</button>
-              <button className="bg-accent text-primary px-4 py-2 rounded font-label">Inverted</button>
-              <button className="bg-transparent text-accent px-4 py-2 rounded font-label border border-accent">Outlined</button>
-            </div>
-
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search"
-                className="w-full bg-secondary border border-neutral/10 rounded-lg py-2 px-10 font-label outline-none focus:ring-1 focus:ring-accent/20"
-              />
-              <span className="absolute left-3 top-2.5 text-neutral">🔍</span>
-            </div>
-
-            <div className="flex justify-around bg-secondary p-3 rounded-2xl border border-neutral/10">
-              <button className="bg-accent text-primary p-2 rounded-lg">🏠</button>
-              <button className="p-2">🔍</button>
-              <button className="p-2">👤</button>
-            </div>
-          </section>
-        </main>
-      </div>
+          <div className="text-right">
+            <p className="text-[10px] font-label uppercase tracking-widest text-text-muted">© {new Date().getFullYear()} RS Artelier</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Newsreader } from "next/font/google";
 import "./globals.css";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -58,7 +59,10 @@ export default function RootLayout({
       className={`${inter.variable} ${newsreader.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-body" suppressHydrationWarning>{children}</body>
+      <body className="min-h-full flex flex-col font-body" suppressHydrationWarning>
+        <AnalyticsTracker />
+        {children}
+      </body>
     </html>
   );
 }

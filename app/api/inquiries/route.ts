@@ -3,6 +3,9 @@ import dbConnect from "@/lib/mongodb";
 import Inquiry from "@/models/Inquiry";
 import Artwork from "@/models/Artwork";
 import { sendInquiryEmail } from "@/lib/mail";
+import { cookies } from "next/headers";
+import Visitor from "@/models/Visitor";
+import AnalyticsEvent from "@/models/AnalyticsEvent";
 
 export const dynamic = "force-dynamic";
 
@@ -138,6 +141,32 @@ export async function POST(request: Request) {
       status: "New",
       artwork: artworkId || null,
     });
+
+    // Retroactively update visitor session details and log inquiry event
+    try {
+      const cookieStore = await cookies();
+      const sessionId = cookieStore.get("visitor_session_id")?.value;
+      if (sessionId) {
+        // Update Visitor identity (retroactive name/email binding)
+        await Visitor.findOneAndUpdate(
+          { sessionId },
+          { name, email },
+          { new: true }
+        );
+
+        // Log the inquiry event
+        await AnalyticsEvent.create({
+          sessionId,
+          type: "inquiry",
+          path: artworkId ? "/" : "/contact",
+          artwork: artworkId || null,
+          label: subject || "Submitted Inquiry",
+        });
+      }
+    } catch (analyticsError) {
+      // Do not block form submission if analytics updates fail
+      console.error("Failed to update visitor session details during inquiry:", analyticsError);
+    }
 
     // Send email using SMTP
     try {

@@ -65,6 +65,27 @@ export default function Gallery() {
     }
   }, [selectedArtwork]);
 
+  // Track artwork view when lightbox opens
+  useEffect(() => {
+    if (selectedArtwork) {
+      const isAdmin = document.cookie.split(";").some((c) => c.trim().startsWith("token="));
+      if (isAdmin) return;
+
+      fetch("/api/analytics", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "artwork_view",
+          path: window.location.pathname,
+          artworkId: selectedArtwork._id,
+          label: selectedArtwork.title,
+        }),
+      }).catch((err) => console.error("Artwork view tracking error:", err));
+    }
+  }, [selectedArtwork]);
+
   const handleInquirySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedArtwork) return;

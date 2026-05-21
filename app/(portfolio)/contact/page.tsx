@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import ScrollReveal from "@/components/ScrollReveal";
 import {
   Mail,
   MapPin,
@@ -151,33 +152,38 @@ const ContactPage = () => {
   return (
     <div className="min-h-screen bg-primary font-body">
       {/* Hero Header */}
-      <section className="pt-16 md:pt-28 pb-6 md:pb-12 px-6 text-center animate-in fade-in duration-700">
-        <h1 className="text-4xl md:text-6xl font-headline text-accent mb-3 italic">
-          Get in Touch
-        </h1>
-        <p className="text-text-muted font-label uppercase tracking-widest text-xs md:text-sm max-w-lg mx-auto">
-          If you’d like to connect, talk about art, or just say hello, feel free
-          to reach out.
-        </p>
-      </section>
+      <ScrollReveal direction="none" duration={1}>
+        <section className="pt-16 md:pt-28 pb-6 md:pb-12 px-6 text-center">
+          <h1 className="text-4xl md:text-6xl font-headline text-accent mb-3 italic">
+            Get in Touch
+          </h1>
+          <p className="text-text-muted font-label uppercase tracking-widest text-xs md:text-sm max-w-lg mx-auto">
+            If you’d like to connect, talk about art, or just say hello, feel free
+            to reach out.
+          </p>
+        </section>
+      </ScrollReveal>
 
       {/* Mobile Studio Image */}
-      <div className="lg:hidden px-6 pb-6 animate-in fade-in duration-700">
-        <div className="relative h-60 w-full rounded-2xl overflow-hidden shadow-xs border border-neutral/10">
-          <Image
-            src="/images/contact-hero.png"
-            alt="Studio Detail"
-            fill
-            className="object-cover"
-            priority
-          />
+      <ScrollReveal delay={0.15}>
+        <div className="lg:hidden px-6 pb-6">
+          <div className="relative h-60 w-full rounded-2xl overflow-hidden shadow-xs border border-neutral/10">
+            <Image
+              src="/images/contact-hero.png"
+              alt="Studio Detail"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
         </div>
-      </div>
+      </ScrollReveal>
 
       <div className="max-w-6xl mx-auto px-6 pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
           {/* Contact Form */}
-          <div className="bg-secondary/30 p-6 md:p-12 rounded-2xl border border-neutral/10 shadow-sm transition-all duration-300">
+          <ScrollReveal delay={0.1} className="h-full">
+            <div className="bg-secondary/30 p-6 md:p-12 rounded-2xl border border-neutral/10 shadow-sm transition-all duration-300 h-full">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Feedback States */}
               {submitStatus === "success" && (
@@ -318,9 +324,11 @@ const ContactPage = () => {
               </button>
             </form>
           </div>
+          </ScrollReveal>
 
           {/* Contact Details & Image */}
-          <div className="space-y-8 lg:space-y-12 animate-in slide-in-from-bottom-8 duration-700">
+          <ScrollReveal delay={0.25} className="h-full">
+            <div className="space-y-8 lg:space-y-12 h-full">
             <div className="hidden lg:block relative h-96 w-full rounded-3xl overflow-hidden shadow-sm border border-neutral/10">
               <Image
                 src="/images/contact-hero.png"
@@ -385,6 +393,7 @@ const ContactPage = () => {
               </div>
             </div>
           </div>
+          </ScrollReveal>
         </div>
       </div>
     </div>

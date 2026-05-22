@@ -288,7 +288,7 @@ const InquiriesPage = () => {
               className={`flex items-center gap-2 px-4 py-2 border rounded font-label text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
                 showFilters || startDate || endDate || statusFilter !== "all"
                   ? "bg-accent/10 border-accent text-accent"
-                  : "bg-white border-border text-text-muted hover:text-text-header"
+                  : "bg-primary border-border text-text-muted hover:text-text-header"
               }`}
             >
               <Filter size={14} />
@@ -300,7 +300,7 @@ const InquiriesPage = () => {
                   prev === "latest" ? "oldest" : "latest",
                 )
               }
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-border rounded font-label text-xs font-semibold uppercase tracking-wider text-text-muted hover:text-text-header transition-all cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2 bg-primary border border-border rounded font-label text-xs font-semibold uppercase tracking-wider text-text-muted hover:text-text-header transition-all cursor-pointer"
             >
               <ArrowUpDown size={14} />
               <span>Sort: {sortOrder === "latest" ? "Latest" : "Oldest"}</span>
@@ -311,7 +311,7 @@ const InquiriesPage = () => {
 
       {/* Advanced Filter Panel */}
       {showFilters && (
-        <div className="bg-white border border-border rounded-xl p-6 shadow-sm grid grid-cols-1 sm:grid-cols-2 gap-6 animate-in slide-in-from-top-4 duration-300">
+        <div className="bg-primary border border-border rounded-xl p-6 shadow-sm grid grid-cols-1 sm:grid-cols-2 gap-6 animate-in slide-in-from-top-4 duration-300">
           <div className="space-y-2">
             <label className="text-[10px] font-label uppercase tracking-widest text-text-muted">
               Date Range
@@ -327,7 +327,7 @@ const InquiriesPage = () => {
                 onChange={(val) => setDateRange(val as DateObject[])}
                 format="YYYY/MM/DD"
                 containerClassName="w-full"
-                render={<input className="w-full h-[36px] pl-9 pr-3 text-xs border border-border rounded focus:ring-1 focus:ring-accent outline-none bg-white font-label transition-all placeholder:text-text-muted/60" placeholder="Select date range..." />}
+                render={<input className="w-full h-[36px] pl-9 pr-3 text-xs border border-border rounded focus:ring-1 focus:ring-accent outline-none bg-primary font-label transition-all placeholder:text-text-muted/60" placeholder="Select date range..." />}
               />
             </div>
           </div>
@@ -335,7 +335,7 @@ const InquiriesPage = () => {
           <div className="flex items-end">
             <button
               onClick={clearFilters}
-              className="w-full h-[36px] bg-neutral-50 hover:bg-neutral-100 border border-border rounded font-label text-[10px] font-semibold uppercase tracking-wider text-text-muted hover:text-text-header transition-all cursor-pointer"
+              className="w-full h-[36px] bg-secondary hover:bg-secondary/80 border border-border rounded font-label text-[10px] font-semibold uppercase tracking-wider text-text-muted hover:text-text-header transition-all cursor-pointer"
             >
               Clear All Filters
             </button>
@@ -344,11 +344,11 @@ const InquiriesPage = () => {
       )}
 
       {/* Main Mailbox Workspace */}
-      <div className="flex bg-white border border-border rounded-xl overflow-hidden shadow-sm flex-1 min-h-[500px]">
+      <div className="flex bg-primary border border-border rounded-xl overflow-hidden shadow-sm flex-1 min-h-[500px]">
         {/* Left Side: Inbox List */}
         <div className="w-full md:w-5/12 border-r border-border flex flex-col h-full overflow-hidden">
           {/* List Search Bar */}
-          <div className="p-4 border-b border-border bg-neutral-50/50 space-y-3">
+          <div className="p-4 border-b border-border bg-secondary/30 space-y-3">
             <div className="relative">
               <Search
                 size={14}
@@ -359,17 +359,17 @@ const InquiriesPage = () => {
                 placeholder="Search by sender, email, subject..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 pr-4 py-2 text-xs border border-border rounded focus:ring-1 focus:ring-accent outline-none w-full bg-white transition-all font-body"
+                className="pl-9 pr-4 py-2 text-xs border border-border rounded focus:ring-1 focus:ring-accent outline-none w-full bg-primary transition-all font-body"
               />
             </div>
 
             {/* Quick Tabs: All / Unread / Starred */}
-            <div className="flex bg-neutral-100 p-0.5 rounded-lg border border-border">
+            <div className="flex bg-secondary p-0.5 rounded-lg border border-border">
               <button
                 onClick={() => setStatusFilter("all")}
                 className={`flex-1 py-1.5 rounded text-[10px] font-semibold uppercase tracking-wider transition-all cursor-pointer ${
                   statusFilter === "all"
-                    ? "bg-white text-text-header shadow-xs"
+                    ? "bg-primary text-text-header shadow-xs"
                     : "hover:text-text-header text-text-muted"
                 }`}
               >
@@ -379,7 +379,7 @@ const InquiriesPage = () => {
                 onClick={() => setStatusFilter("unread")}
                 className={`flex-1 py-1.5 rounded text-[10px] font-semibold uppercase tracking-wider transition-all cursor-pointer ${
                   statusFilter === "unread"
-                    ? "bg-white text-text-header shadow-xs"
+                    ? "bg-primary text-text-header shadow-xs"
                     : "hover:text-text-header text-text-muted"
                 }`}
               >
@@ -389,7 +389,7 @@ const InquiriesPage = () => {
                 onClick={() => setStatusFilter("starred")}
                 className={`flex-1 py-1.5 rounded text-[10px] font-semibold uppercase tracking-wider transition-all cursor-pointer ${
                   statusFilter === "starred"
-                    ? "bg-white text-text-header shadow-xs"
+                    ? "bg-primary text-text-header shadow-xs"
                     : "hover:text-text-header text-text-muted"
                 }`}
               >
@@ -416,8 +416,8 @@ const InquiriesPage = () => {
                   onClick={() => setSelectedId(inquiry._id)}
                   className={`w-full text-left p-5 transition-all border-l-2 flex gap-3 relative group cursor-pointer ${
                     selectedId === inquiry._id
-                      ? "bg-secondary/10 border-l-accent"
-                      : "hover:bg-secondary/5 border-l-transparent"
+                      ? "bg-secondary/50 border-l-accent"
+                      : "hover:bg-secondary/20 border-l-transparent"
                   } ${!inquiry.isRead ? "bg-accent/5" : ""}`}
                 >
                   {/* Left Indicators */}
@@ -430,7 +430,7 @@ const InquiriesPage = () => {
                       className={`transition-colors cursor-pointer ${
                         inquiry.isStarred
                           ? "text-amber-500 hover:text-amber-600"
-                          : "text-neutral-300 hover:text-amber-500 group-hover:text-neutral-400"
+                          : "text-neutral-500 hover:text-amber-500 group-hover:text-neutral-400"
                       }`}
                     >
                       <Star
@@ -477,7 +477,7 @@ const InquiriesPage = () => {
 
           {/* Inbox Pagination Controls */}
           {pagination.total > 0 && (
-            <div className="p-4 border-t border-border bg-neutral-50/50 flex items-center justify-between">
+            <div className="p-4 border-t border-border bg-secondary/30 flex items-center justify-between">
               <span className="text-[10px] text-text-muted font-label uppercase tracking-widest">
                 Showing {inquiries.length} of {pagination.total} mails
               </span>
@@ -488,7 +488,7 @@ const InquiriesPage = () => {
                       setCurrentPage((prev) => Math.max(prev - 1, 1))
                     }
                     disabled={pagination.page === 1}
-                    className="p-1.5 border border-border bg-white rounded text-text-muted disabled:opacity-30 disabled:pointer-events-none hover:text-text-header transition-colors cursor-pointer"
+                    className="p-1.5 border border-border bg-primary rounded text-text-muted disabled:opacity-30 disabled:pointer-events-none hover:text-text-header transition-colors cursor-pointer"
                   >
                     <ChevronLeft size={14} />
                   </button>
@@ -502,7 +502,7 @@ const InquiriesPage = () => {
                       )
                     }
                     disabled={pagination.page === pagination.pages}
-                    className="p-1.5 border border-border bg-white rounded text-text-muted disabled:opacity-30 disabled:pointer-events-none hover:text-text-header transition-colors cursor-pointer"
+                    className="p-1.5 border border-border bg-primary rounded text-text-muted disabled:opacity-30 disabled:pointer-events-none hover:text-text-header transition-colors cursor-pointer"
                   >
                     <ChevronRight size={14} />
                   </button>
@@ -516,7 +516,7 @@ const InquiriesPage = () => {
         <div
           className={`
           ${selectedId ? "flex fixed inset-0 z-50 md:relative md:inset-auto md:z-0 md:flex" : "hidden md:flex"}
-          flex-1 flex-col bg-white md:bg-secondary/5 h-full overflow-y-auto transition-all duration-300
+          flex-1 flex-col bg-primary md:bg-secondary/5 h-full overflow-y-auto transition-all duration-300
         `}
         >
           {selectedInquiry ? (
@@ -531,7 +531,7 @@ const InquiriesPage = () => {
               </button>
 
               {/* Header Action bar */}
-              <div className="bg-white border border-border rounded-2xl p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="bg-primary border border-border rounded-2xl p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="space-y-1">
                   <h3 className="text-lg font-headline font-bold text-text-header">
                     {selectedInquiry.name}
@@ -542,7 +542,7 @@ const InquiriesPage = () => {
                     </span>
                     {selectedInquiry.phone && (
                       <>
-                        <span className="text-neutral/20">•</span>
+                        <span className="text-border">•</span>
                         <span>{selectedInquiry.phone}</span>
                       </>
                     )}
@@ -552,9 +552,9 @@ const InquiriesPage = () => {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleToggleStar(selectedInquiry)}
-                    className={`p-2 border rounded hover:bg-neutral-50 transition-colors cursor-pointer ${
+                    className={`p-2 border rounded hover:bg-secondary/50 transition-colors cursor-pointer ${
                       selectedInquiry.isStarred
-                        ? "text-amber-500 border-amber-200 bg-amber-50/20"
+                        ? "text-amber-500 border-amber-500/30 bg-amber-500/10"
                         : "text-text-muted border-border"
                     }`}
                     title={
@@ -574,7 +574,7 @@ const InquiriesPage = () => {
                   </button>
                   <button
                     onClick={() => handleDeleteClick(selectedInquiry)}
-                    className="p-2 border border-border rounded hover:bg-red-50 hover:text-red-600 transition-colors text-text-muted cursor-pointer"
+                    className="p-2 border border-border rounded hover:bg-red-500/10 hover:text-red-400 transition-colors text-text-muted cursor-pointer"
                     title="Delete inquiry"
                   >
                     <Trash2 size={16} />
@@ -583,22 +583,22 @@ const InquiriesPage = () => {
               </div>
 
               {/* Inquiry Email Body Card */}
-              <div className="bg-white border border-border rounded-2xl p-8 shadow-xs space-y-6">
+              <div className="bg-primary border border-border rounded-2xl p-8 shadow-xs space-y-6">
                 {/* Meta details */}
                 <div className="flex flex-wrap items-center gap-3 pb-6 border-b border-border">
                   <span
                     className={`px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-widest rounded-full ${
                       !selectedInquiry.isRead
                         ? "bg-accent/15 text-accent"
-                        : "bg-neutral-100 text-neutral-500"
+                        : "bg-secondary text-text-muted"
                     }`}
                   >
                     {!selectedInquiry.isRead ? "Unread" : "Read"}
                   </span>
 
                   {selectedInquiry.isStarred && (
-                    <span className="px-2.5 py-0.5 bg-amber-50 text-amber-600 text-[9px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1">
-                      <Star size={8} className="fill-amber-500" /> Starred
+                    <span className="px-2.5 py-0.5 bg-amber-500/10 text-amber-400 text-[9px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1">
+                      <Star size={8} className="fill-amber-400" /> Starred
                     </span>
                   )}
 
@@ -620,7 +620,7 @@ const InquiriesPage = () => {
                 {/* Linked Artwork Context */}
                 {selectedInquiry.artwork && (
                   <div className="bg-secondary/15 border border-border rounded-2xl p-5 flex items-center gap-5 transition-all duration-300 hover:shadow-xs mb-6">
-                    <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-secondary/20 flex-shrink-0 border border-neutral/10">
+                    <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-secondary/20 flex-shrink-0 border border-border">
                       <img
                         src={selectedInquiry.artwork.coverImage}
                         alt={selectedInquiry.artwork.title}
@@ -641,7 +641,7 @@ const InquiriesPage = () => {
                       )}
                     </div>
                     <div className="flex-shrink-0 self-center hidden sm:block">
-                      <span className="text-[10px] font-label uppercase tracking-widest text-text-muted font-bold px-3 py-1 bg-white border border-border rounded-lg shadow-2xs">
+                      <span className="text-[10px] font-label uppercase tracking-widest text-text-muted font-bold px-3 py-1 bg-primary border border-border rounded-lg shadow-2xs">
                         Linked Artwork
                       </span>
                     </div>
@@ -654,7 +654,7 @@ const InquiriesPage = () => {
                     {selectedInquiry.subject}
                   </h4>
 
-                  <div className="text-sm text-text-header leading-relaxed whitespace-pre-wrap font-body bg-neutral-50/30 p-6 border border-border rounded-xl">
+                  <div className="text-sm text-text-header leading-relaxed whitespace-pre-wrap font-body bg-secondary/30 p-6 border border-border rounded-xl">
                     {selectedInquiry.message}
                   </div>
                 </div>
@@ -673,7 +673,7 @@ const InquiriesPage = () => {
 
                   <button
                     onClick={() => handleCopyEmail(selectedInquiry.email)}
-                    className="px-5 py-2.5 bg-white border border-border rounded font-label text-[10px] font-semibold uppercase tracking-widest hover:text-text-header hover:bg-neutral-50 transition-all flex items-center gap-2 cursor-pointer text-text-muted"
+                    className="px-5 py-2.5 bg-primary border border-border rounded font-label text-[10px] font-semibold uppercase tracking-widest hover:text-text-header hover:bg-secondary transition-all flex items-center gap-2 cursor-pointer text-text-muted"
                   >
                     {copiedEmail ? (
                       <>

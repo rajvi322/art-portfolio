@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # 🎨 Art Portfolio
 
 A full-stack portfolio and content management system built for artists. The public-facing side delivers a beautifully crafted gallery experience, while the backend gives artists full control over their work, inquiries, and audience — all from a single dashboard.
@@ -35,4 +35,3 @@ The app is built on Next.js and deploys seamlessly to **Vercel**. Images are ser
 
 *🔒 Private & proprietary. All rights reserved.*
 
->>>>>>> 1a177333ea3b3dd35a8df571735e0b48dcbf25db

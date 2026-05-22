@@ -1,41 +1,38 @@
 <<<<<<< HEAD
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎨 Art Portfolio
 
-## Getting Started
+A full-stack portfolio and content management system built for artists. The public-facing side delivers a beautifully crafted gallery experience, while the backend gives artists full control over their work, inquiries, and audience — all from a single dashboard.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🛠️ Tech Stack
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Next.js 16** · **TypeScript** · **Tailwind CSS v4** · **MongoDB** · **Cloudinary** · **Framer Motion**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✨ Features
 
-## Learn More
+### 🖼️ Public Gallery
+A responsive, Pinterest-style masonry gallery with a full-screen lightbox viewer and smooth Lenis-powered scrolling. Visitors can filter works by medium (Watercolors, Acrylics, Sketches, and more), browse an artist biography page, and send inquiries directly through a built-in contact form. Fully responsive and mobile-first across all breakpoints.
 
-To learn more about Next.js, take a look at the following resources:
+### 🔐 Admin Dashboard
+A secure, JWT-authenticated panel where artists can add, edit, and delete artworks with ease. Images are uploaded via drag-and-drop or file picker and automatically optimised through Cloudinary. The standout feature: one-click AI metadata generation powered by the Hugging Face BLIP captioning model — producing artwork titles and descriptions independently, straight from the image itself.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 📊 Analytics
+Real-time audience insights without third-party tracking. The dashboard surfaces KPI cards (total views, unique visitors, time spent, interactions), a dual-line engagement chart comparing page views vs. unique visitors over time, and a ranked breakdown of top-performing artworks. Social media click-throughs are tracked, and a per-session activity log captures every page view, lightbox open, and inquiry — filterable by last 7 days, 30 days, or all time.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 📬 Inquiry Management
+All visitor inquiries land in a dedicated inbox inside the admin panel, keeping communication organised and easy to manage without relying on external email clients.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚀 Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-=======
-# art-portfolio
-Art portfolio for displaying and managing art
+The app is built on Next.js and deploys seamlessly to **Vercel**. Images are served via **Cloudinary's CDN**, and the database runs on **MongoDB Atlas** — making the full stack cloud-native and production-ready out of the box.
+
+---
+
+*🔒 Private & proprietary. All rights reserved.*
+
 >>>>>>> 1a177333ea3b3dd35a8df571735e0b48dcbf25db

@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   ),
+  icons: {
+    icon: "/images/rs-logo.png",
+  },
   title: {
     default: "RS Artelier | Art, Colors, and Creativity",
     template: "%s | RS Artelier",
@@ -59,7 +62,7 @@ export default function RootLayout({
       className={`${inter.variable} ${newsreader.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-body" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col font-body bg-background text-foreground" suppressHydrationWarning>
         <AnalyticsTracker />
         {children}
       </body>

@@ -32,7 +32,7 @@ const StatCard = ({ title, value, icon: Icon, trend, hexColor }: StatCardProps) 
   const isNegative = trend !== null && trend < 0;
 
   return (
-    <div className="bg-white p-6 rounded-3xl border border-neutral/10 shadow-sm hover:shadow-md transition-all group">
+    <div className="bg-secondary p-6 rounded-3xl border border-border shadow-sm hover:shadow-md transition-all group">
       <div className="flex justify-between items-start mb-4">
         <div 
           className="p-3 rounded-2xl group-hover:scale-110 transition-transform duration-500"
@@ -210,7 +210,7 @@ const ArtworkPieChart = ({ data }: { data: any[] }) => {
             const color = colors[idx % colors.length];
             const pct = total > 0 ? ((item.count / total) * 100).toFixed(1) : "0.0";
             return (
-              <div key={item._id} className="flex items-center justify-between py-2 px-3 rounded-xl hover:bg-neutral-50 transition-colors">
+              <div key={item._id} className="flex items-center justify-between py-2 px-3 rounded-xl hover:bg-secondary/20 transition-colors">
                 <div className="flex items-center gap-3">
                   <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
                   <div>
@@ -240,7 +240,7 @@ const ArtworkPieChart = ({ data }: { data: any[] }) => {
             const pct = grandTotal > 0 ? ((item.count / grandTotal) * 100).toFixed(0) : "0";
             const isTop = idx === 0;
             return (
-              <div key={item._id} className="flex items-center justify-between p-4 rounded-xl border border-neutral/8 hover:bg-neutral-50 transition-colors">
+              <div key={item._id} className="flex items-center justify-between p-4 rounded-xl border border-border hover:bg-secondary/20 transition-colors">
                 <div className="flex items-center gap-3">
                   <span className="text-[10px] font-label text-text-muted w-5 text-center font-mono">#{idx + 1}</span>
                   <div>
@@ -250,7 +250,7 @@ const ArtworkPieChart = ({ data }: { data: any[] }) => {
                 </div>
                 <div className="flex items-center gap-4">
                   {isTop && (
-                    <span className="text-[10px] font-label font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full uppercase tracking-widest">
+                    <span className="text-[10px] font-label font-bold text-emerald-600 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full uppercase tracking-widest">
                       Top
                     </span>
                   )}
@@ -330,35 +330,34 @@ export default function Dashboard() {
           <div className="relative">
             <button 
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-2 bg-white border border-neutral/20 px-4 py-2 rounded-full text-xs font-label uppercase tracking-widest text-text-header hover:bg-neutral-50 transition-colors"
+              className="flex items-center gap-2 bg-primary border border-border px-4 py-2 rounded-full text-xs font-label uppercase tracking-widest text-text-header hover:bg-secondary transition-colors"
             >
               {timeframe === "7d" ? "Last 7 Days" : timeframe === "30d" ? "Last 30 Days" : "All Time"}
               <ChevronDown size={14} />
             </button>
-            
+
             {isDropdownOpen && (
-              <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-neutral/10 rounded-2xl shadow-lg overflow-hidden z-10">
+              <div className="absolute right-0 top-full mt-2 w-48 bg-primary border border-border rounded-2xl shadow-lg overflow-hidden z-10">
                 <button 
                   onClick={() => { setTimeframe("7d"); setIsDropdownOpen(false); }}
-                  className="w-full text-left px-4 py-3 text-xs font-label uppercase tracking-widest hover:bg-neutral-50 text-text-header"
+                  className="w-full text-left px-4 py-3 text-xs font-label uppercase tracking-widest hover:bg-secondary text-text-header"
                 >
                   Last 7 Days
                 </button>
                 <button 
                   onClick={() => { setTimeframe("30d"); setIsDropdownOpen(false); }}
-                  className="w-full text-left px-4 py-3 text-xs font-label uppercase tracking-widest hover:bg-neutral-50 border-t border-neutral/5 text-text-header"
+                  className="w-full text-left px-4 py-3 text-xs font-label uppercase tracking-widest hover:bg-secondary border-t border-border text-text-header"
                 >
                   Last 30 Days
                 </button>
                 <button 
                   onClick={() => { setTimeframe("all"); setIsDropdownOpen(false); }}
-                  className="w-full text-left px-4 py-3 text-xs font-label uppercase tracking-widest hover:bg-neutral-50 border-t border-neutral/5 text-text-header"
+                  className="w-full text-left px-4 py-3 text-xs font-label uppercase tracking-widest hover:bg-secondary border-t border-border text-text-header"
                 >
                   All Time
                 </button>
               </div>
-            )}
-          </div>
+            )}          </div>
         }
       />
 
@@ -411,28 +410,28 @@ export default function Dashboard() {
             />
           </div>
 
-          <div className="bg-white p-6 md:p-8 rounded-3xl border border-neutral/10 shadow-sm flex flex-col justify-between">
+          <div className="bg-secondary p-6 md:p-8 rounded-3xl border border-border shadow-sm flex flex-col justify-between">
              <h4 className="text-text-muted text-xs font-label uppercase tracking-widest mb-2">Engagement Overview</h4>
              <DualLineChart data={trafficTrend} />
           </div>
 
-          <div className="bg-white border border-neutral/10 rounded-3xl overflow-hidden shadow-sm">
-            <div className="flex border-b border-neutral/10 overflow-x-auto">
+          <div className="bg-primary border border-border rounded-3xl overflow-hidden shadow-sm">
+            <div className="flex border-b border-border overflow-x-auto">
               <button 
                 onClick={() => setActiveTab("artwork")}
-                className={`flex-1 min-w-[200px] py-4 text-xs font-label uppercase tracking-widest transition-colors ${activeTab === 'artwork' ? 'bg-secondary/5 text-text-header border-b-2 border-accent' : 'text-text-muted hover:bg-secondary/5'}`}
+                className={`flex-1 min-w-[200px] py-4 text-xs font-label uppercase tracking-widest transition-colors ${activeTab === 'artwork' ? 'bg-secondary/50 text-text-header border-b-2 border-accent' : 'text-text-muted hover:bg-secondary/5'}`}
               >
                 Top 5 Artworks
               </button>
               <button 
                 onClick={() => setActiveTab("social")}
-                className={`flex-1 min-w-[200px] py-4 text-xs font-label uppercase tracking-widest transition-colors ${activeTab === 'social' ? 'bg-secondary/5 text-text-header border-b-2 border-accent' : 'text-text-muted hover:bg-secondary/5'}`}
+                className={`flex-1 min-w-[200px] py-4 text-xs font-label uppercase tracking-widest transition-colors ${activeTab === 'social' ? 'bg-secondary/50 text-text-header border-b-2 border-accent' : 'text-text-muted hover:bg-secondary/5'}`}
               >
                 Social Clicks
               </button>
               <button 
                 onClick={() => setActiveTab("visitors")}
-                className={`flex-1 min-w-[200px] py-4 text-xs font-label uppercase tracking-widest transition-colors ${activeTab === 'visitors' ? 'bg-secondary/5 text-text-header border-b-2 border-accent' : 'text-text-muted hover:bg-secondary/5'}`}
+                className={`flex-1 min-w-[200px] py-4 text-xs font-label uppercase tracking-widest transition-colors ${activeTab === 'visitors' ? 'bg-secondary/50 text-text-header border-b-2 border-accent' : 'text-text-muted hover:bg-secondary/5'}`}
               >
                 Recent Activity
               </button>
@@ -450,9 +449,9 @@ export default function Dashboard() {
                   {socialClicks.length > 0 ? (
                     <div className="overflow-y-auto max-h-80 space-y-3 pr-1" style={{ scrollbarWidth: "thin" }}>
                       {socialClicks.map((item: any) => (
-                        <div key={item._id} className="bg-white p-4 rounded-2xl border border-neutral/10 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
+                        <div key={item._id} className="bg-primary p-4 rounded-2xl border border-border shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
                           <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-500">
+                            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
                                <Share2 size={18} />
                             </div>
                             <div>

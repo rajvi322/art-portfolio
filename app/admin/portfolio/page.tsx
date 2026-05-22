@@ -317,7 +317,7 @@ const PortfolioAdmin = () => {
           <div
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => onDrop(e, true)}
-            className={`bg-white border ${errors.coverImage ? "border-red-500" : "border-border"} rounded-lg p-8 flex flex-col items-center justify-center text-center space-y-4 min-h-[200px] hover:border-accent transition-colors group cursor-pointer`}
+            className={`bg-primary border ${errors.coverImage ? "border-red-500" : "border-border"} rounded-lg p-8 flex flex-col items-center justify-center text-center space-y-4 min-h-[200px] hover:border-accent transition-colors group cursor-pointer`}
             onClick={() => document.getElementById("coverInput")?.click()}
           >
             <input
@@ -373,7 +373,7 @@ const PortfolioAdmin = () => {
           </div>
 
           {/* Gallery Images Upload */}
-          <div className="bg-white border border-border rounded-lg p-6 space-y-4">
+          <div className="bg-primary border border-border rounded-lg p-6 space-y-4">
             <div className="flex justify-between items-center">
               <div>
                 <label className="text-[10px] font-label uppercase tracking-widest text-text-muted">
@@ -463,7 +463,7 @@ const PortfolioAdmin = () => {
         </div>
 
         {/* Metadata Area */}
-        <div className="bg-white border border-border rounded-lg p-8 space-y-6">
+        <div className="bg-primary border border-border rounded-lg p-8 space-y-6">
           <h3 className="font-headline text-lg font-medium">
             Metadata Details
           </h3>
@@ -632,9 +632,8 @@ const PortfolioAdmin = () => {
                 placeholder="Filter works..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 pr-4 py-2 text-xs border border-border rounded focus:ring-1 focus:ring-accent outline-none w-full sm:w-64 bg-white"
-              />
-            </div>
+                className="pl-9 pr-4 py-2 text-xs border border-border rounded focus:ring-1 focus:ring-accent outline-none w-full sm:w-64 bg-secondary/10"
+              />            </div>
             <button className="p-2 border border-border rounded hover:bg-white transition-colors">
               <div className="grid grid-cols-2 gap-0.5">
                 <div className="w-1.5 h-1.5 bg-text-muted"></div>
@@ -646,11 +645,11 @@ const PortfolioAdmin = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-border rounded-lg overflow-hidden">
+        <div className="bg-primary border border-border rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-border text-[10px] font-label uppercase tracking-widest text-text-muted bg-secondary/5">
+                <tr className="border-b border-border text-[10px] font-label uppercase tracking-widest text-text-muted bg-secondary/50">
                   <th className="px-6 py-4 font-semibold">Thumbnail</th>
                   <th className="px-6 py-4 font-semibold">Title</th>
                   <th className="px-6 py-4 font-semibold">Category</th>
@@ -737,7 +736,7 @@ const PortfolioAdmin = () => {
           </div>
 
           {/* Pagination */}
-          <div className="px-6 py-4 border-t border-border flex items-center justify-between">
+          <div className="px-6 py-4 border-t border-border flex items-center justify-between bg-secondary/30">
             <p className="text-[10px] text-text-muted font-label uppercase tracking-widest">
               Showing {rangeStart}–{rangeEnd} of {filteredArtworks.length} works
             </p>

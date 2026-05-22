@@ -250,7 +250,7 @@ export default function Gallery() {
               {artworks.map((art) => (
                 <div
                   key={art._id}
-                  className="mb-4 lg:mb-6 group cursor-pointer bg-white border border-border rounded-xl shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col"
+                  className="mb-4 lg:mb-6 group cursor-pointer bg-primary border border-border rounded-xl shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col"
                   onClick={() => {
                     setSelectedArtwork(art);
                     setActiveImageIndex(0);
@@ -262,8 +262,8 @@ export default function Gallery() {
                       alt={art.title}
                       className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 rounded-t-xl"
                     />
-                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center text-text-header shadow-sm">
+                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center text-foreground shadow-sm border border-border">
                         <Maximize2 size={16} />
                       </div>
                     </div>

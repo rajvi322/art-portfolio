@@ -12,6 +12,8 @@ import {
   ChevronRight,
   X,
   AlertTriangle,
+  Wand2,
+  Loader2,
 } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { AdminHeader } from "@/components/ui/AdminHeader";
@@ -56,6 +58,10 @@ const PortfolioAdmin = () => {
   const [artworkToDelete, setArtworkToDelete] = useState<Artwork | null>(null);
   const [isDeletingArtwork, setIsDeletingArtwork] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [generatingTarget, setGeneratingTarget] = useState<"title" | "description" | null>(null);
+  const [coverImageLoaded, setCoverImageLoaded] = useState(false);
+  const [galleryImagesLoaded, setGalleryImagesLoaded] = useState<Record<number, boolean>>({});
+  const [tableImagesLoaded, setTableImagesLoaded] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     setCurrentPage(1);
@@ -64,6 +70,45 @@ const PortfolioAdmin = () => {
   useEffect(() => {
     fetchArtworks();
   }, []);
+
+  const handleGenerateMetadata = async (target: "title" | "description") => {
+    if (!formData.coverImage) {
+      alert("Please upload a cover image first to generate metadata.");
+      return;
+    }
+
+    setGeneratingTarget(target);
+    try {
+      const res = await fetch("/api/admin/generate-metadata", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          imageUrl: formData.coverImage,
+          medium: formData.category,
+        }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setFormData((prev) => ({
+          ...prev,
+          ...(target === "title" ? { title: data.title || prev.title } : {}),
+          ...(target === "description"
+            ? { description: data.description || prev.description }
+            : {}),
+        }));
+        if (target === "title" && errors.title)
+          setErrors((prev) => ({ ...prev, title: false }));
+      } else {
+        alert(data.error || "Failed to generate metadata");
+      }
+    } catch (error) {
+      console.error("Error generating metadata:", error);
+      alert("Failed to connect to generation service.");
+    } finally {
+      setGeneratingTarget(null);
+    }
+  };
 
   const fetchArtworks = async () => {
     setIsLoading(true);
@@ -165,12 +210,15 @@ const PortfolioAdmin = () => {
       description: artwork.description || "",
       status: artwork.status,
     });
+    setCoverImageLoaded(false);
+    setGalleryImagesLoaded({});
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleFileUpload = async (file: File, isCover: boolean = true) => {
     const data = new FormData();
     data.append("file", file);
+    if (isCover) setCoverImageLoaded(false);
 
     try {
       const res = await fetch("/api/upload", {
@@ -281,10 +329,15 @@ const PortfolioAdmin = () => {
             />
             {formData.coverImage ? (
               <div className="relative w-full h-48 rounded overflow-hidden group/img">
+                {/* Shimmer loader */}
+                {!coverImageLoaded && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-secondary/20 via-secondary/40 to-secondary/20 animate-pulse" />
+                )}
                 <img
                   src={formData.coverImage}
                   alt="Cover Preview"
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover transition-opacity duration-300 ${coverImageLoaded ? "opacity-100" : "opacity-0"}`}
+                  onLoad={() => setCoverImageLoaded(true)}
                 />
                 <button
                   type="button"
@@ -371,10 +424,15 @@ const PortfolioAdmin = () => {
                   key={index}
                   className="relative aspect-square rounded overflow-hidden border border-border group/item"
                 >
+                  {/* Shimmer loader */}
+                  {!galleryImagesLoaded[index] && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-secondary/20 via-secondary/40 to-secondary/20 animate-pulse" />
+                  )}
                   <img
                     src={img}
                     alt={`Gallery ${index}`}
-                    className="w-full h-full object-cover"
+                    className={`w-full h-full object-cover transition-opacity duration-300 ${galleryImagesLoaded[index] ? "opacity-100" : "opacity-0"}`}
+                    onLoad={() => setGalleryImagesLoaded(prev => ({ ...prev, [index]: true }))}
                   />
                   <button
                     type="button"
@@ -415,16 +473,39 @@ const PortfolioAdmin = () => {
               <label className="text-[10px] font-label uppercase tracking-widest text-text-muted">
                 Artwork Title <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) => {
-                  setFormData({ ...formData, title: e.target.value });
-                  if (errors.title) setErrors({ ...errors, title: false });
-                }}
-                className={`w-full px-4 py-2.5 text-sm bg-secondary/10 border ${errors.title ? "border-red-500" : "border-border"} rounded focus:ring-1 focus:ring-accent outline-none transition-colors`}
-                placeholder="e.g. Echoes of Silence"
-              />
+              <div className="relative w-full">
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => {
+                    setFormData({ ...formData, title: e.target.value });
+                    if (errors.title) setErrors({ ...errors, title: false });
+                  }}
+                  className={`w-full pl-4 pr-12 py-2.5 text-sm bg-secondary/10 border ${errors.title ? "border-red-500" : "border-border"} rounded focus:ring-1 focus:ring-accent outline-none transition-colors`}
+                  placeholder="e.g. Echoes of Silence"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleGenerateMetadata("title")}
+                  disabled={generatingTarget !== null || !formData.coverImage}
+                  className={`absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center transition-all ${
+                    !formData.coverImage
+                      ? "bg-neutral-200 text-white cursor-not-allowed"
+                      : "bg-gradient-to-br from-purple-500 to-pink-500 text-white hover:scale-105 shadow-sm"
+                  }`}
+                  title={
+                    !formData.coverImage
+                      ? "Upload a cover image first"
+                      : "Auto-generate Title"
+                  }
+                >
+                  {generatingTarget === "title" ? (
+                    <Loader2 size={12} className="animate-spin" />
+                  ) : (
+                    <Wand2 size={12} />
+                  )}
+                </button>
+              </div>
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-label uppercase tracking-widest text-text-muted">
@@ -453,14 +534,37 @@ const PortfolioAdmin = () => {
             <label className="text-[10px] font-label uppercase tracking-widest text-text-muted">
               Description
             </label>
-            <textarea
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              className="w-full px-4 py-2.5 text-sm bg-secondary/10 border border-border rounded focus:ring-1 focus:ring-accent outline-none min-h-[120px] resize-none"
-              placeholder="Describe the concept, materials, and emotional intent..."
-            />
+            <div className="relative w-full">
+              <textarea
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+                className="w-full pl-4 pr-10 py-2.5 text-sm bg-secondary/10 border border-border rounded focus:ring-1 focus:ring-accent outline-none min-h-[120px] resize-none"
+                placeholder="Describe the concept, materials, and emotional intent..."
+              />
+              <button
+                type="button"
+                onClick={() => handleGenerateMetadata("description")}
+                disabled={generatingTarget !== null || !formData.coverImage}
+                className={`absolute right-2 bottom-3 w-7 h-7 rounded-full flex items-center justify-center transition-all ${
+                  !formData.coverImage
+                    ? "bg-neutral-200 text-white cursor-not-allowed"
+                    : "bg-gradient-to-br from-purple-500 to-pink-500 text-white hover:scale-105 shadow-sm"
+                }`}
+                title={
+                  !formData.coverImage
+                    ? "Upload a cover image first"
+                    : "Auto-generate Description"
+                }
+              >
+                {generatingTarget === "description" ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : (
+                  <Wand2 size={12} />
+                )}
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center justify-end pt-4">
@@ -579,11 +683,16 @@ const PortfolioAdmin = () => {
                       className="group hover:bg-secondary/5 transition-colors"
                     >
                       <td className="px-6 py-4">
-                        <div className="w-16 h-10 rounded bg-secondary/30 overflow-hidden border border-border">
+                        <div className="relative w-16 h-10 rounded overflow-hidden border border-border bg-secondary/20">
+                          {/* Shimmer loader */}
+                          {!tableImagesLoaded[art._id] && (
+                            <div className="absolute inset-0 bg-gradient-to-r from-secondary/20 via-secondary/40 to-secondary/20 animate-pulse" />
+                          )}
                           <img
                             src={art.coverImage}
                             alt={art.title}
-                            className="w-full h-full object-cover"
+                            className={`w-full h-full object-cover transition-opacity duration-300 ${tableImagesLoaded[art._id] ? "opacity-100" : "opacity-0"}`}
+                            onLoad={() => setTableImagesLoaded(prev => ({ ...prev, [art._id]: true }))}
                           />
                         </div>
                       </td>

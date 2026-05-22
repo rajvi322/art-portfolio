@@ -5,15 +5,50 @@ import { verifyAdmin } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: Request) {
   await dbConnect();
   try {
-    const artworks = await Artwork.find({}).sort({ createdAt: -1 });
-    return NextResponse.json(artworks);
+    const { searchParams } = new URL(request.url);
+    const pageParam = searchParams.get("page");
+
+    // If no page parameter is provided, keep backwards compatibility and return all artworks as a flat list
+    if (!pageParam) {
+      const artworks = await Artwork.find({}).sort({ createdAt: -1 });
+      return NextResponse.json(artworks);
+    }
+
+    const page = parseInt(pageParam, 10);
+    const limit = parseInt(searchParams.get("limit") || "6", 10);
+    const category = searchParams.get("category") || "all";
+
+    const query: any = {};
+    if (category && category !== "all") {
+      query.category = category;
+    }
+
+    const skip = (page - 1) * limit;
+
+    const total = await Artwork.countDocuments(query);
+    const artworks = await Artwork.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const hasMore = skip + artworks.length < total;
+
+    return NextResponse.json({
+      artworks,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+      hasMore,
+    });
   } catch (error) {
+    console.error("Failed to fetch artworks:", error);
     return NextResponse.json({ error: "Failed to fetch artworks" }, { status: 500 });
   }
 }
+
 
 export async function POST(request: Request) {
   const adminId = await verifyAdmin();

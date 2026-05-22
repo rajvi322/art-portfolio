@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight, X, Maximize2 } from "lucide-react";
 
 import Masonry from "react-masonry-css";
@@ -20,7 +20,16 @@ export default function Gallery() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  
+  // Loading and pagination states
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Ref to completely prevent duplicate concurrent fetches
+  const isLoadingMoreRef = useRef(false);
 
   // Inquiry form states
   const [showInquiryForm, setShowInquiryForm] = useState(false);
@@ -43,10 +52,6 @@ export default function Gallery() {
     "sketches",
   ];
 
-  useEffect(() => {
-    fetchArtworks();
-  }, []);
-
   // Reset inquiry form when lightbox state changes
   useEffect(() => {
     if (!selectedArtwork) {
@@ -57,6 +62,27 @@ export default function Gallery() {
       setInquiryMessage("");
       setInquiryWebsite("");
       setSubmitStatus("idle");
+    }
+  }, [selectedArtwork]);
+
+  // Track artwork view when lightbox opens
+  useEffect(() => {
+    if (selectedArtwork) {
+      const isAdmin = document.cookie.split(";").some((c) => c.trim().startsWith("token="));
+      if (isAdmin) return;
+
+      fetch("/api/analytics", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "artwork_view",
+          path: window.location.pathname,
+          artworkId: selectedArtwork._id,
+          label: selectedArtwork.title,
+        }),
+      }).catch((err) => console.error("Artwork view tracking error:", err));
     }
   }, [selectedArtwork]);
 
@@ -97,23 +123,78 @@ export default function Gallery() {
     }
   };
 
-  const fetchArtworks = async () => {
+  const fetchArtworks = async (category: string) => {
     setIsLoading(true);
+    setError(null);
+    isLoadingMoreRef.current = false;
     try {
-      const res = await fetch("/api/artworks");
+      const res = await fetch(`/api/artworks?page=1&limit=6&category=${category}`);
+      if (!res.ok) throw new Error("Failed to fetch artworks");
       const data = await res.json();
-      setArtworks(data);
-    } catch (error) {
-      console.error("Failed to fetch artworks:", error);
+      setArtworks(data.artworks || []);
+      setHasMore(data.hasMore ?? false);
+      setPage(1);
+    } catch (err: any) {
+      console.error("Failed to fetch artworks:", err);
+      setError("Failed to load artworks. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const filteredArtworks =
-    activeCategory === "all"
-      ? artworks
-      : artworks.filter((art) => art.category === activeCategory);
+  const fetchMoreArtworks = async () => {
+    if (isLoading || isLoadingMoreRef.current || !hasMore) return;
+    isLoadingMoreRef.current = true;
+    setIsLoadingMore(true);
+    setError(null);
+    const nextPage = page + 1;
+    try {
+      // Elegant 1-second delay so that the loading indicator and skeletons are visible
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const res = await fetch(`/api/artworks?page=${nextPage}&limit=6&category=${activeCategory}`);
+      if (!res.ok) throw new Error("Failed to fetch artworks");
+      const data = await res.json();
+      setArtworks((prev) => [...prev, ...(data.artworks || [])]);
+      setHasMore(data.hasMore ?? false);
+      setPage(nextPage);
+    } catch (err: any) {
+      console.error("Failed to fetch more artworks:", err);
+      setError("Failed to load more artworks. Please try again.");
+    } finally {
+      isLoadingMoreRef.current = false;
+      setIsLoadingMore(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchArtworks(activeCategory);
+  }, [activeCategory]);
+
+  const observerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (isLoading || !hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchMoreArtworks();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTarget = observerRef.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [isLoading, isLoadingMore, hasMore, page, activeCategory]);
 
   const allImages = selectedArtwork
     ? [selectedArtwork.coverImage, ...(selectedArtwork.images || [])]
@@ -155,49 +236,105 @@ export default function Gallery() {
           ))}
         </div>
       ) : (
-        <Masonry
-          breakpointCols={breakpointCols}
-          className="flex -ml-4 lg:-ml-6 w-auto"
-          columnClassName="pl-4 lg:pl-6 bg-clip-padding"
-        >
-          {filteredArtworks.map((art) => (
-            <div
-              key={art._id}
-              className="mb-4 lg:mb-6 group cursor-pointer bg-white border border-border rounded-xl shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col"
-              onClick={() => {
-                setSelectedArtwork(art);
-                setActiveImageIndex(0);
-              }}
+        <>
+          {artworks.length === 0 ? (
+            <div className="text-center py-20 text-text-muted text-xs font-label italic">
+              No artworks found in this category.
+            </div>
+          ) : (
+            <Masonry
+              breakpointCols={breakpointCols}
+              className="flex -ml-4 lg:-ml-6 w-auto"
+              columnClassName="pl-4 lg:pl-6 bg-clip-padding"
             >
-              <div className="relative overflow-hidden bg-secondary/10 rounded-t-xl">
-                <img
-                  src={art.coverImage}
-                  alt={art.title}
-                  className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 rounded-t-xl"
-                />
-                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center text-text-header shadow-sm">
-                    <Maximize2 size={16} />
+              {artworks.map((art) => (
+                <div
+                  key={art._id}
+                  className="mb-4 lg:mb-6 group cursor-pointer bg-white border border-border rounded-xl shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col"
+                  onClick={() => {
+                    setSelectedArtwork(art);
+                    setActiveImageIndex(0);
+                  }}
+                >
+                  <div className="relative overflow-hidden bg-secondary/10 rounded-t-xl">
+                    <img
+                      src={art.coverImage}
+                      alt={art.title}
+                      className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 rounded-t-xl"
+                    />
+                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center text-text-header shadow-sm">
+                        <Maximize2 size={16} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-2 pt-3 px-3 pb-3">
+                    <h3 className="font-newsreader text-base text-text-header group-hover:text-accent transition-colors duration-300 font-semibold leading-snug">
+                      {art.title}
+                    </h3>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-label uppercase tracking-widest text-text-muted bg-secondary/35 px-2.5 py-0.5 rounded-md">
+                        {art.category}
+                      </span>
+                      <span className="text-[10px] font-label text-text-muted">
+                        {art.year}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="space-y-2 pt-3 px-3 pb-3">
-                <h3 className="font-newsreader text-base text-text-header group-hover:text-accent transition-colors duration-300 font-semibold leading-snug">
-                  {art.title}
-                </h3>
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-label uppercase tracking-widest text-text-muted bg-secondary/35 px-2.5 py-0.5 rounded-md">
-                    {art.category}
-                  </span>
-                  <span className="text-[10px] font-label text-text-muted">
-                    {art.year}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </Masonry>
+              ))}
+              {isLoadingMore &&
+                [1, 2, 3].map((i) => (
+                  <div
+                    key={`skeleton-more-${i}`}
+                    className="mb-4 lg:mb-6 bg-secondary/5 border border-border rounded-xl shadow-xs animate-pulse flex flex-col overflow-hidden"
+                  >
+                    <div className="w-full aspect-[4/3] bg-secondary/20"></div>
+                    <div className="space-y-2 pt-3 px-3 pb-3">
+                      <div className="h-4 bg-secondary/35 rounded-md w-3/4"></div>
+                      <div className="flex justify-between items-center pt-2">
+                        <div className="h-3 bg-secondary/25 rounded-md w-1/4"></div>
+                        <div className="h-3 bg-secondary/20 rounded-md w-10"></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </Masonry>
+          )}
+        </>
       )}
+
+      {/* Bottom Loading / Intersection Observer Marker */}
+      <div
+        ref={observerRef}
+        className="pt-10 pb-16 flex flex-col items-center justify-center min-h-[80px]"
+      >
+        {isLoadingMore && (
+          <div className="flex flex-col items-center gap-3 animate-in fade-in duration-300">
+            <span className="w-8 h-8 border-[3px] border-neutral/20 border-t-accent rounded-full animate-spin" />
+            <span className="text-[10px] font-label uppercase tracking-widest text-text-muted mt-1">
+              Loading more pieces...
+            </span>
+          </div>
+        )}
+        {!hasMore && artworks.length > 0 && (
+          <div className="text-[10px] font-label uppercase tracking-widest text-text-muted opacity-60">
+            End of Collection
+          </div>
+        )}
+        {error && (
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-xs text-red-500 font-label">{error}</span>
+            <button
+              onClick={() => fetchMoreArtworks()}
+              className="px-6 py-2 border border-neutral/10 rounded-full text-[10px] font-label uppercase tracking-widest hover:bg-secondary/20 transition-all cursor-pointer"
+            >
+              Retry Load
+            </button>
+          </div>
+        )}
+      </div>
+
 
       {/* Lightbox */}
       {selectedArtwork && (

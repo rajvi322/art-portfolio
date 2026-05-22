@@ -1,5 +1,6 @@
 import Gallery from "@/components/Gallery";
 import Link from "next/link";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export default function Home() {
   return (
@@ -7,22 +8,26 @@ export default function Home() {
       {/* Hero Section */}
       <section className="pt-12 md:pt-24 pb-16 md:pb-24 px-6">
         <div className="max-w-7xl mx-auto text-center space-y-6">
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-7xl font-newsreader font-medium tracking-tight leading-[1.1]">
-              Colors, Calm & <br />
-              <span className="italic text-accent">Creativity</span>
-            </h1>
-            <p className="max-w-2xl mx-auto text-text-muted text-xs md:text-sm font-label uppercase tracking-[0.2em] pt-2">
-              A small collection of artworks, sketches, and creative moments
-            </p>
-          </div>
+          <ScrollReveal>
+            <div className="space-y-4">
+              <h1 className="text-4xl md:text-7xl font-newsreader font-medium tracking-tight leading-[1.1]">
+                Colors, Calm & <br />
+                <span className="italic text-accent">Creativity</span>
+              </h1>
+              <p className="max-w-2xl mx-auto text-text-muted text-xs md:text-sm font-label uppercase tracking-[0.2em] pt-2">
+                A small collection of artworks, sketches, and creative moments
+              </p>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Gallery Section */}
       <section id="gallery" className="px-6 pb-16 md:pb-28">
         <div className="max-w-7xl mx-auto">
-          <Gallery />
+          <ScrollReveal delay={0.25}>
+            <Gallery />
+          </ScrollReveal>
         </div>
       </section>
 
